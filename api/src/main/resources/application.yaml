@@ -1,0 +1,19 @@
+server:
+  port: 8989
+spring:
+  datasource:
+    url: jdbc:sqlite::resource:db/database.sqlite
+    username:
+    password:
+    driver-class-name: org.sqlite.JDBC # sqlite driver
+
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+
+mybatis:
+  config-location: classpath:mybatis/config.xml
+  mapper-locations: classpath:mybatis/mapper/*.xml
+  executorType: SIMPLE
+

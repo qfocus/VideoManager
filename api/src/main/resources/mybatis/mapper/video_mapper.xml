@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.plainpub.videomanager.repository.IVideoRepository">
+
+    <resultMap id="videoListMap" type="Video">
+        <result property="id" column="v_id"/>
+        <result property="name" column="v_name"/>
+        <result property="createdTime" column="created_time"/>
+        <result property="updatedTime" column="updated_time"/>
+        <result property="path" column="path"/>
+
+        <collection property="tags" ofType="Tag">
+            <id property="id" column="t_id"/>
+            <result property="name" column="t_name"/>
+        </collection>
+
+        <collection property="actors" ofType="Actor">
+            <result property="id" column="a_id"/>
+            <result property="name" column="a_name"/>
+        </collection>
+
+        <collection property="ratings" ofType="Rating">
+            <result property="rating" column="rating"/>
+            <result property="ratingTime" column="rating_date"/>
+        </collection>
+
+    </resultMap>
+
+    <sql id="videoInfo">
+        SELECT v.id            AS v_id,
+               v.name          AS v_name,
+               v.path          AS path,
+               tag.id          AS t_id,
+               tag.name        AS t_name,
+               a.name          as a_name,
+               a.id            as a_id,
+               rv.rating       as rating,
+               rv.created_time as rating_date
+        FROM video AS v
+                 LEFT OUTER JOIN tag_video tv on v.id = tv.video_id
+                 LEFT OUTER JOIN tag on tag.id = tv.tag_id
+                 LEFT OUTER JOIN cast c on v.id = c.video_id
+                 LEFT OUTER JOIN actor a on c.actor_id = a.id
+                 LEFT OUTER JOIN rating_video rv on v.id = rv.video_id
+    </sql>
+
+    <select id="getAllVideos" resultMap="videoListMap">
+        <include refid="videoInfo"/>
+    </select>
+
+    <select id="getVideosByTags" resultMap="videoListMap">
+        <include refid="videoInfo"/>
+        WHERE tv.tag_id in
+        <foreach item="item" index="index" collection="list"
+                 open="(" separator="," close=")">
+            #{item}
+        </foreach>
+
+    </select>
+
+</mapper>
