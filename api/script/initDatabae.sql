@@ -12,6 +12,7 @@ CREATE TABLE "video"
 (
     "id"           INTEGER       NOT NULL UNIQUE,
     "name"         NVARCHAR(20),
+    "title"        NVARCHAR(200),
     "path"         NVARCHAR(200),
     "created_time" CHARACTER(19) NOT NULL,
     "updated_time" CHARACTER(19) NOT NULL,
@@ -77,7 +78,7 @@ CREATE TABLE "rating_video"
 (
     "id"           INTEGER       NOT NULL UNIQUE,
     "video_id"     INTEGER       NOT NULL,
-    "rating"       INTEGER       NOT NULL,
+    "rating"       NUMERIC       NOT NULL,
     "created_time" CHARACTER(19) NOT NULL,
     "updated_time" CHARACTER(19) NOT NULL,
     PRIMARY KEY ("id" AUTOINCREMENT),
@@ -88,7 +89,7 @@ CREATE TABLE "rating_actor"
 (
     "id"           INTEGER       NOT NULL UNIQUE,
     "actor_id"     INTEGER       NOT NULL,
-    "rating"       INTEGER       NOT NULL,
+    "rating"       NUMERIC       NOT NULL,
     "created_time" CHARACTER(19) NOT NULL,
     "updated_time" CHARACTER(19) NOT NULL,
     PRIMARY KEY ("id" AUTOINCREMENT),

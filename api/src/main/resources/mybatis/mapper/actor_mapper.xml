@@ -1,16 +1,34 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.plainpub.videomanager.repository.IActorRepository">
+    <resultMap id="actorMap" type="Actor">
+        <result property="id" column="a_id"/>
+        <result property="name" column="name"/>
+        <result property="alias" column="alias"/>
+        <result property="createdTime" column="created_time"/>
+        <result property="updatedTime" column="updated_time"/>
 
-    <select id="getAllActor" resultType="Actor">
-        SELECT id, name, alias, created_time as createdTime, updated_time as updatedTime
-        FROM actor
+        <collection property="ratings" ofType="Rating">
+            <result property="rating" column="rating"/>
+            <result property="ratingTime" column="rating_date"/>
+        </collection>
+    </resultMap>
+
+    <sql id="actorInfo">
+        SELECT a.id as a_id, a.name as name, a.alias as alias, ra.rating as rating, ra.created_time as rating_date
+        FROM actor a
+                 LEFT OUTER JOIN rating_actor ra on a.id = ra.actor_id
+    </sql>
+
+    <select id="getAllActors" resultMap="actorMap">
+        <include refid="actorInfo"/>
     </select>
 
-    <select id="getActor" resultType="Actor">
-        SELECT id, name, alias, created_time as createdTime, updated_time as updatedTime
-        FROM actor
-        WHERE id =#{id}
+    <select id="getActor" resultMap="actorMap">
+        <include refid="actorInfo"/>
+        WHERE a.id = #{id}
+        ORDER BY ra.created_time DESC
+        LIMIT 1
     </select>
 
 
